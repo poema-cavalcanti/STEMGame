@@ -34,7 +34,8 @@ public class BunnyGame extends BasicGame
     	* By setting it to false animation will update only when
     	* the user presses a key.
     	*/
-    	Image [] movementUp = {new Image("bunny/data/bunny_back.gif"), new Image("bunny/data/bunny_back.gif")};
+    	Image upStrip = new Image("bunny/data/strip_test.bmp");
+    	Image [] movementUp = {upStrip.getSubImage(0, 0, 75, 75), upStrip.getSubImage(75, 0, 75, 75)};
     	up = new Animation(movementUp, duration, false);
     	
     	Image [] movementDown = {new Image("bunny/data/bunny_front.gif"), new Image("bunny/data/bunny_front.gif")};
