@@ -31,7 +31,7 @@ public class BunnyGame extends BasicGame
     public void init(GameContainer gc) 
 			throws SlickException 
 	{
-    	Image up = new Image("bunny/data/test_saved_in_paint.bmp");
+    	Image up = new Image("bunny/data/strip_forward.bmp");
     	Image down = new Image("bunny/data/test_saved_in_paint.bmp");
     	Image side = new Image("bunny/data/test_saved_in_paint.bmp");
     	grassMap = new TiledMap("bunny/data/grassy_tile_map.tmx");
