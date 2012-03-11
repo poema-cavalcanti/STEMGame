@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="10" height="8" tilewidth="75" tileheight="75">
+ <tileset firstgid="1" name="grass_rock_tile" tilewidth="75" tileheight="75">
+  <image source="grass_rock_tile.png" width="75" height="75"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="10" height="8">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NkYGBgHMVkYwD9+/chQAEAAA==
+  </data>
+ </layer>
+</map>
