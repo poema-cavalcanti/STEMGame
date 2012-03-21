@@ -18,12 +18,9 @@ import bunny.entity.Entity;
  
 public class BunnyGame extends BasicGame
 {
-	private TiledMap grassMap;
-	private Image up;
-	private Image down;
-	private Image side;
+	private TiledMap homeMap;
 	private float x = 34f, y = 34f;
-	Entity bunny;
+	private Entity bunny;
 	
     public BunnyGame()
     {
@@ -34,10 +31,10 @@ public class BunnyGame extends BasicGame
     public void init(GameContainer gc) 
 			throws SlickException 
 	{
-    	grassMap = new TiledMap("data/grassy_tile_map.tmx"); 
-    	up = new Image("data/test_saved_in_paint.bmp");
-    	down = new Image("data/strip_foward.bmp");
-    	side = new Image("data/test_saved_in_paint.bmp");
+    	homeMap = new TiledMap("data/home_room.tmx"); 
+    	Image up = new Image("data/rabbit_back.bmp");
+    	Image down = new Image("data/rabbit_forward.bmp");
+    	Image side = new Image("data/rabbit_side.bmp");
     	bunny = new Entity("bunny");
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl"));
     	bunny.AddComponent(new RenderComponent("BunnyRender"));
@@ -57,7 +54,7 @@ public class BunnyGame extends BasicGame
     public void render(GameContainer gc, Graphics g) 
 			throws SlickException 
     {
-    	grassMap.render(0,0);
+    	homeMap.render(0,0);
     	bunny.render(gc, null, g);
     }
  
