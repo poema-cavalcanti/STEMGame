@@ -10,16 +10,20 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
  
+import bunny.game.Direction;
 import bunny.component.Component;
 import bunny.component.render.RenderComponent;
- 
+
+
 public class Entity {
  
     String id;
  
     Vector2f position;
-    float scale;
+    private boolean[][] blocked;
+	private static final int SIZE = 75;
 
     int [] duration = {100, 100, 100, 100, 100, 100};
 	
@@ -47,7 +51,7 @@ public class Entity {
 
 	private Animation sprite = null;
 	
-	private int directionIndex; // 0 - up, 1 - down, 2 - left, 3 - right
+	private Direction direction;
 	
     RenderComponent renderComponent = null;
  
@@ -60,7 +64,6 @@ public class Entity {
         components = new ArrayList<Component>();
  
         position = new Vector2f(0,0);
-        scale = 1;
         
     	upStrip = null;
     	downStrip = null;
@@ -80,7 +83,7 @@ public class Entity {
     	
         sprite = right;
         
-        directionIndex = 3;
+        direction = Direction.RIGHT;
     }
  
     public void AddComponent(Component component)
@@ -108,25 +111,27 @@ public class Entity {
     	return position;
     }
  
-    public float getScale()
-    {
-    	return scale;
-    }
- 
     public Animation getSprite()
     {
     	return sprite;
     }
     
-    public int getDirection()
+    public Direction getDirection()
     {
-    	return directionIndex;
+    	return direction;
     }
  
     public String getId()
     {
     	return id;
     }
+
+	public boolean isBlocked(float x, float y)
+	{
+	    int xBlock = (int)x / SIZE;
+	    int yBlock = (int)y / SIZE;
+	    return blocked[xBlock][yBlock];
+	}
     
     public void setImages(String upD, String downD, String sideD, Color t)
     {
@@ -157,35 +162,58 @@ public class Entity {
     	
     	sprite = right;
     }
+    
+    public void setBlocked(TiledMap Map)
+    {
+		blocked = new boolean[Map.getWidth()][Map.getHeight()];
+		for (int xAxis=0;xAxis<Map.getWidth(); xAxis++)
+		{
+			for (int yAxis=0; yAxis < Map.getHeight(); yAxis++) {
+				int tileID = Map.getTileId(xAxis, yAxis, 0);
+				String value = Map.getTileProperty(tileID, "blocked", "false");
+				if ("true".equals(value)) {
+					blocked[xAxis][yAxis] = true;
+				}
+			}
+		}
+    }
  
     public void setPosition(Vector2f position) 
     {
     	this.position = position;
     }
  
-    public void setSprite(int change) // 0 - up, 1 - down, 2 - left, 3 - right
+    public void setSprite(Direction change)
     {
-        if (change == 0) {
-        	sprite = up;
-        	directionIndex = 0;
-        }
-        if (change == 1) {
-        	sprite = down;
-        	directionIndex = 1;
-        }
-        if (change == 2) {
-        	sprite = left;
-        	directionIndex = 2;
-        }
-        if (change == 3) {
-        	sprite = right;
-        	directionIndex = 3;
-        }
-    }
- 
-    public void setScale(float scale) 
-    {
-    	this.scale = scale;
+    	switch (change) {
+    	case UP:
+    		if (direction != Direction.UP) {
+    			sprite = up;
+    			direction = Direction.UP;
+    		}
+    		break;
+    	case DOWN:
+    		if (direction != Direction.DOWN) {
+    			sprite = down;
+    			direction = Direction.DOWN;
+    		}
+    		break;
+    	case LEFT:
+    		if (direction != Direction.LEFT) {
+    			sprite = left;
+    			direction = Direction.LEFT;
+    		}
+    		break;
+    	case RIGHT:
+    		if (direction != Direction.RIGHT) {
+    			sprite = right;
+    			direction = Direction.RIGHT;
+    		}
+    		break;
+    	default:
+    		System.out.println("What's going on?!");
+    		break;
+    	}
     }
  
     public void update(GameContainer gc, StateBasedGame sb, int delta)

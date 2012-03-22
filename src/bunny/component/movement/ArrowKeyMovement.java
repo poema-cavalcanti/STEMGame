@@ -5,6 +5,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
  
+import bunny.game.Direction;
 import bunny.component.Component;
 
 public class ArrowKeyMovement extends Component {
@@ -30,29 +31,51 @@ public class ArrowKeyMovement extends Component {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
 	{
-		// 0 - up, 1 - down, 2 - left, 3 - right
 		Input input = gc.getInput();
 		Vector2f position = owner.getPosition();
-		
     	if (input.isKeyDown(Input.KEY_UP))
     	{
-    	    owner.setSprite(0);
-    	    position.y -= delta * 0.1f;
+    	    owner.setSprite(Direction.UP);
+    	    if (owner.getSprite().isStopped()) {
+    	    	owner.getSprite().start();
+    	    }
+    	    if (!owner.isBlocked(position.x, position.y - delta * 0.1f)) {
+    	    	position.y -= delta * 0.1f;
+    	    }
+    	    owner.getSprite().update(delta);
     	}
     	else if (input.isKeyDown(Input.KEY_DOWN))
     	{
-    	    owner.setSprite(1);
-    	    position.y += delta * 0.1f;
+    	    owner.setSprite(Direction.DOWN);
+    	    if (owner.getSprite().isStopped()) {
+    	    	owner.getSprite().start();
+    	    }
+    	    if (!owner.isBlocked(position.x, position.y + delta * 0.1f)) {
+    	    	position.y += delta * 0.1f;
+    	    }
+    	    owner.getSprite().update(delta);
     	}
     	else if (input.isKeyDown(Input.KEY_LEFT))
     	{
-    	    owner.setSprite(2);
-    	    position.x -= delta * 0.1f;
+    	    owner.setSprite(Direction.LEFT);
+    	    if (owner.getSprite().isStopped()) {
+    	    	owner.getSprite().start();
+    	    }
+    	    if (!owner.isBlocked(position.x - delta * 0.1f, position.y)) {
+    	    	position.x -= delta * 0.1f;
+    	    }
+    	    owner.getSprite().update(delta);
     	}
     	else if (input.isKeyDown(Input.KEY_RIGHT))
     	{
-    	    owner.setSprite(3);
-    	    position.x += delta * 0.1f;
+    	    owner.setSprite(Direction.RIGHT);
+    	    if (owner.getSprite().isStopped()) {
+    	    	owner.getSprite().start();
+    	    }
+    	    if (!owner.isBlocked(position.x + delta * 0.1f, position.y)) {
+    	    	position.x += delta * 0.1f;
+    	    }
+    	    owner.getSprite().update(delta);
     	}
     	
     	owner.setPosition(position);
