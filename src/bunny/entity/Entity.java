@@ -3,9 +3,11 @@ package bunny.entity;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
  
@@ -19,7 +21,7 @@ public class Entity {
     Vector2f position;
     float scale;
 
-    int [] duration = {300, 300, 300, 300, 300, 300};
+    int [] duration = {100, 100, 100, 100, 100, 100};
 	
 	/*
 	* false variable means do not auto update the animation.
@@ -43,8 +45,9 @@ public class Entity {
 	private Image [] movementRight;
 	private Animation right; 
 
-	// Original orientation of the sprite. It will look right.
 	private Animation sprite = null;
+	
+	private int directionIndex; // 0 - up, 1 - down, 2 - left, 3 - right
 	
     RenderComponent renderComponent = null;
  
@@ -59,9 +62,9 @@ public class Entity {
         position = new Vector2f(0,0);
         scale = 1;
         
-    	Image upStrip = null;
-    	Image downStrip = null;
-    	Image sideStrip = null;
+    	upStrip = null;
+    	downStrip = null;
+    	sideStrip = null;
 
     	movementUp = new Image[6];
     	up = null;
@@ -76,6 +79,8 @@ public class Entity {
     	right = null;
     	
         sprite = right;
+        
+        directionIndex = 3;
     }
  
     public void AddComponent(Component component)
@@ -112,26 +117,39 @@ public class Entity {
     {
     	return sprite;
     }
+    
+    public int getDirection()
+    {
+    	return directionIndex;
+    }
  
     public String getId()
     {
     	return id;
     }
     
-    public void setImages(Image upD, Image downD, Image sideD)
+    public void setImages(String upD, String downD, String sideD, Color t)
     {
-    	upStrip = upD;
-    	downStrip = downD;
-    	sideStrip = sideD;
+    	try {
+			upStrip = new Image (upD, t);
+			downStrip = new Image (downD, t);
+	    	sideStrip = new Image (sideD, t);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
     	
-    	for (int i = 0; i < 5; i++)
+    	for (int i = 0; i < 6; i++)
     	{
     		movementUp[i] = upStrip.getSubImage((75*i), 0, 75, 75);
     		movementDown[i] = downStrip.getSubImage((75*i), 0, 75, 75);
-    		movementLeft[i] = sideStrip.getSubImage((75*i), 0, 75, 75);
-    		movementRight[i] = (sideStrip.getSubImage((75*i), 0, 75, 75)).getFlippedCopy(false, true);
+    		movementLeft[i] = (sideStrip.getSubImage((75*i), 0, 75, 75)).getFlippedCopy(true, false);
+    		movementRight[i] = sideStrip.getSubImage((75*i), 0, 75, 75);
     	}
     	
+    	for (int i = 0; i<= 5; i++) {
+    		System.out.println("Up Anim Frame");
+    		System.out.println(movementUp[i]);
+    	}
     	up = new Animation(movementUp, duration, false);
     	down = new Animation(movementDown, duration, false);
     	left = new Animation(movementLeft, duration, false);
@@ -147,14 +165,22 @@ public class Entity {
  
     public void setSprite(int change) // 0 - up, 1 - down, 2 - left, 3 - right
     {
-        if (change == 0)
+        if (change == 0) {
         	sprite = up;
-        if (change == 1)
+        	directionIndex = 0;
+        }
+        if (change == 1) {
         	sprite = down;
-        if (change == 2)
+        	directionIndex = 1;
+        }
+        if (change == 2) {
         	sprite = left;
-        if (change == 3)
+        	directionIndex = 2;
+        }
+        if (change == 3) {
         	sprite = right;
+        	directionIndex = 3;
+        }
     }
  
     public void setScale(float scale) 

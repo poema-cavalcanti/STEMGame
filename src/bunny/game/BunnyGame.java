@@ -1,13 +1,12 @@
 package bunny.game;
 
-import java.util.*;
-import org.newdawn.slick.Animation;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
@@ -19,7 +18,7 @@ import bunny.entity.Entity;
 public class BunnyGame extends BasicGame
 {
 	private TiledMap homeMap;
-	private float x = 34f, y = 34f;
+	private float x = 75f, y = 450f;
 	private Entity bunny;
 	
     public BunnyGame()
@@ -32,13 +31,15 @@ public class BunnyGame extends BasicGame
 			throws SlickException 
 	{
     	homeMap = new TiledMap("data/home_room.tmx"); 
-    	Image up = new Image("data/rabbit_back.bmp");
-    	Image down = new Image("data/rabbit_forward.bmp");
-    	Image side = new Image("data/rabbit_side.bmp");
+    	String up = "data/rabbit_back.bmp";
+    	String down = "data/rabbit_forward.bmp";
+    	String side = "data/rabbit_side.bmp";
+    	Color Transparent = (new Image(up)).getColor(0, 0);
+    	
     	bunny = new Entity("bunny");
+    	bunny.setImages(up, down, side, Transparent);
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl"));
     	bunny.AddComponent(new RenderComponent("BunnyRender"));
-    	bunny.setImages(up,down,side);
     	bunny.setPosition(new Vector2f(x,y));
     }
  
