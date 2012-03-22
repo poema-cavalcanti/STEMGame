@@ -16,6 +16,7 @@ import bunny.component.movement.ArrowKeyMovement;
 import bunny.component.render.RenderComponent;
 import bunny.entity.Entity;
 import bunny.state.HomeState;
+import bunny.state.TrainingState;
  
 public class BunnyGame extends StateBasedGame
 {
@@ -29,6 +30,7 @@ public class BunnyGame extends StateBasedGame
 			throws SlickException 
 	{
     	addState(new HomeState());
+    	addState(new TrainingState());
 	}
  
     public static void main(String[] args) 
