@@ -14,6 +14,7 @@ import bunny.component.attack.EnemyAttack;
 import bunny.component.attack.HeroAttack;
 import bunny.component.movement.ArrowKeyMovement;
 import bunny.component.render.RenderComponent;
+import bunny.entity.EntityType;
 import bunny.entity.characters.Bunny;
 import bunny.entity.characters.Wolf;
 import bunny.game.GamePlayState;
@@ -39,22 +40,34 @@ public class TrainingState extends BasicGameState
     	String up = "data/rabbit_back.bmp"; 			// only gets the file name strings instead of creating image
     	String down = "data/rabbit_forward.bmp";
     	String side = "data/rabbit_side.bmp";
-    	Color Transparent = (new Image(up)).getColor(0, 0);   // this gets the color from the top-left pixel so we know which color to make transparent
+    	String attack = "data/bunny_attack_strip.bmp";
     	
+    	Color Transparent = (new Image(up)).getColor(0, 0);   // this gets the color from the top-left pixel so we know which color to make transparent
     	bunny = new Bunny("bunny"); // create our bunny object
     	bunny.setImages(up, down, side, Transparent); // inside of setImages is where the actual image loading happens and we pass the color
+    	
+    	Transparent = (new Image(attack)).getColor(0, 0);
+    	bunny.setAttack(attack, Transparent);
+    	
     	bunny.setBlocked(trainingMap);
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
     	bunny.AddComponent(new RenderComponent("BunnyRender")); // add render (almost like a toString, but not)
     	bunny.AddComponent(new HeroAttack("BunnyAttack")); // add attack
     	bunny.setPosition(new Vector2f(bx,by)); // where the bunny will first appear on screen
     	
-    	up = "wolf_back_run_strip.bmp";
-    	down = "wolf_front_run_strip.bmp";
-    	side = "wolf_side_run_strip.bmp";
+    	up = "data/wolf_back_run_strip.bmp";
+    	down = "data/wolf_front_run_strip.bmp";
+    	side = "data/wolf_side_run_strip.bmp";
+    	attack ="data/wolf_attack_strip.bmp";
+    	
     	Transparent = (new Image(up)).getColor(0,0);
     	wolf = new Wolf("wolf1");
     	wolf.setImages(up, down, side, Transparent);
+    	
+    	Transparent = (new Image(attack)).getColor(0, 0);
+    	wolf.setAttack(attack, Transparent);
+    	
+    	wolf.setType(EntityType.CONST_WOLF);
     	wolf.setBlocked(trainingMap);
     	wolf.AddComponent(new RenderComponent("WolfRender"));
     	wolf.AddComponent(new EnemyAttack("WolfAttack"));
