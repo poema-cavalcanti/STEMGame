@@ -90,7 +90,7 @@ public class Entity {
     	right = null;
     	
     	attackImagesR = new Image[5];
-    	attackImagesR = new Image[5];
+    	attackImagesL = new Image[5];
     	
         sprite = right;
         direction = Direction.RIGHT;
@@ -196,6 +196,7 @@ public class Entity {
 			e.printStackTrace();
 		}
     	
+    	System.out.println("attckStrip: " + attckStrip);
     	for (int i = 0; i < 5; i++) {
     		attackImagesR[i] = attckStrip.getSubImage((75*i), 0, 75, 75);
     		attackImagesL[i] = attckStrip.getSubImage((75*i), 0, 75, 75).getFlippedCopy(true, false);
