@@ -51,7 +51,7 @@ public class HomeState extends BasicGameState
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
     	bunny.AddComponent(new RenderComponent("BunnyRender")); // add render (almost like a toString, but not)
     	if(this.game.getLastStateId() == TrainingState.ID) {
-    		this.x = 550; 
+    		this.x = 600; 
     		this.y = 275;
     	}
     	
@@ -81,6 +81,9 @@ public class HomeState extends BasicGameState
 		bunny.update(container,null,delta);
 		if(bunny.getPosition().x > 655) {
 			if(bunny.getPosition().y > 246 && bunny.getPosition().y < 311) {
+				this.x = 600; 
+	    		this.y = 275;
+	    		bunny.setPosition(new Vector2f(x,y));
 				game.enterState(TrainingState.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 			}
 		}

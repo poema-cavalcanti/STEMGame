@@ -63,6 +63,9 @@ public class TrainingState extends BasicGameState
 		bunny.update(container,null,delta);
 		if(bunny.getPosition().x < 4) {
 			if(bunny.getPosition().y > 228 && bunny.getPosition().y < 296) {
+				this.x = 30; 
+	    		this.y = 288;
+	    		bunny.setPosition(new Vector2f(x,y));
 				game.enterState(HomeState.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 			}
 		}
