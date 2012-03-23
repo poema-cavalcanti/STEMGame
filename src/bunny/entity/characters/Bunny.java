@@ -3,6 +3,7 @@ package bunny.entity.characters;
 import bunny.entity.Entity;
 import bunny.entity.characters.BunnyStates;
 import bunny.entity.characters.Wolf;
+import bunny.game.Direction;
 
 public class Bunny extends Entity{
 
@@ -73,9 +74,42 @@ public class Bunny extends Entity{
     	targetedEnemy = enemy;
     }
     
-    // INFO HANDLING
     public boolean takeDamage(int damage) {
     	return false;
     }
     
+    public void startAttack() {
+		switch (getDirection()) {
+		case UP:
+			if ((targetedEnemy.getPosition().getX() > (getPosition().getX() - 25))|| (targetedEnemy.getPosition().getX() < (getPosition().getX() + 25))) {
+				if ((targetedEnemy.getPosition().getY() < (getPosition().getY() - 75)))
+				{
+					setNearEnemy(true);
+				}
+			}
+		case DOWN:
+			if ((targetedEnemy.getPosition().getX() > (getPosition().getX() - 25))|| (targetedEnemy.getPosition().getX() < (getPosition().getX() + 25))) {
+				if ((targetedEnemy.getPosition().getY() > (getPosition().getY() + 100)))
+				{
+					setNearEnemy(true);
+				}
+			}
+		case LEFT:
+			if ((targetedEnemy.getPosition().getY() > (getPosition().getY() - 25))|| (targetedEnemy.getPosition().getY() < (getPosition().getY() + 25))) {
+				if ((targetedEnemy.getPosition().getX() < (getPosition().getX() + 100)))
+				{
+					setNearEnemy(true);
+				}
+			}
+		case RIGHT:
+			if ((targetedEnemy.getPosition().getX() > (getPosition().getX() - 25))|| (targetedEnemy.getPosition().getX() < (getPosition().getX() + 25))) {
+				if ((targetedEnemy.getPosition().getY() < (getPosition().getX() + 100)))
+				{
+					setNearEnemy(true);
+				}
+			}
+		default:
+			setNearEnemy(false);
+		}
+    }
 }

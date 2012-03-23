@@ -37,6 +37,7 @@ public class Entity {
 	Image upStrip;
 	Image downStrip;
 	Image sideStrip;
+	Image attckStrip;
 
 	private Image [] movementUp;
 	private Animation up;
@@ -50,6 +51,12 @@ public class Entity {
 	private Image [] movementRight;
 	private Animation right; 
 
+	private Image [] attackImagesR;
+	private Animation attackRight;
+	
+	private Image [] attackImagesL;
+	private Animation attackLeft;
+	
 	private Animation sprite = null;
 	protected Direction direction;
 	
@@ -81,6 +88,9 @@ public class Entity {
     	
     	movementRight = new Image[6];
     	right = null;
+    	
+    	attackImagesR = new Image[5];
+    	attackImagesR = new Image[5];
     	
         sprite = right;
         direction = Direction.RIGHT;
@@ -179,6 +189,22 @@ public class Entity {
     	sprite = right;
     }
     
+    public void setAttack(String attck, Color t) {
+    	try {
+			attckStrip = new Image(attck, t);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+    	
+    	for (int i = 0; i < 5; i++) {
+    		attackImagesR[i] = attckStrip.getSubImage((75*i), 0, 75, 75);
+    		attackImagesL[i] = attckStrip.getSubImage((75*i), 0, 75, 75).getFlippedCopy(true, false);
+    	}
+    	
+    	attackRight = new Animation(attackImagesR, 100, false);
+    	attackLeft = new Animation(attackImagesL, 100, false);
+    }
+    
     // stores where the entity's movement is/isn't blocked
     public void setBlocked(TiledMap Map)
     {
@@ -227,6 +253,16 @@ public class Entity {
     			direction = Direction.RIGHT;
     		}
     		break;
+    	case ATTACK_LEFT:
+    		sprite = attackLeft;
+    		sprite.start();
+    		sprite.stopAt(4);
+    		setSprite(getDirection());
+    	case ATTACK_RIGHT:
+    		sprite = attackRight;
+    		sprite.start();
+    		sprite.stopAt(4);
+    		setSprite(getDirection());
     	default:
     		System.out.println("What's going on?!");
     		break;

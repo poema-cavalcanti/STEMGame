@@ -18,6 +18,10 @@ public class EnemyAttack extends Component{
 		this.id = id;
 	}
 	
+	public void setOwnerEntity(Wolf owner)
+    {
+    	this.owner = owner;
+    }
 	public boolean getHit ()
 	{
 		return hit;
@@ -29,6 +33,7 @@ public class EnemyAttack extends Component{
 			hero.takeDamage(owner.getAttackValue());
 			owner.incrementTurnNumber();
 			owner.setCurrentState(AttackState.WAITING);
+			owner.resetCountDown();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -38,12 +43,14 @@ public class EnemyAttack extends Component{
 		Input input = gc.getInput();
     	if (input.isKeyDown(Input.KEY_A))
     	{
-    		if(owner.getCurrentState() == AttackState.ATTACKING)
-    		{
+    		if(owner.getCurrentState() == AttackState.ATTACKING) {
 	    		if((owner.getPosition()).distance((owner.getBunny()).getPosition()) <= 100) {
 	    			if (owner.getBunny().getCurrentState() != BunnyStates.TALKING)
 	    				attack(owner.getBunny());
 	    		}
+    		}
+    		else {
+    			owner.updateCountDown();
     		}
     	}
 	}

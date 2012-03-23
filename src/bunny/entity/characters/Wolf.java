@@ -13,6 +13,7 @@ public class Wolf extends Entity{
 	private boolean targeted;
 	private int turnNumber;
 	AttackState currentState;
+	private int waitingCountDown;
 	private Bunny bunny;
 	
 	public Wolf(String id) {
@@ -21,6 +22,7 @@ public class Wolf extends Entity{
 		targeted = false;
 		currentState = AttackState.WAITING;
 		turnNumber = 1;
+		waitingCountDown = 1000;
 	}
 	
 	// GET
@@ -62,6 +64,10 @@ public class Wolf extends Entity{
 		return turnNumber;
 	}
 	
+	public int getCountDown() {
+		return waitingCountDown;
+	}
+	
 	// SET
 	public void setHealth(int health) {
     	healthPoints = health;
@@ -73,10 +79,6 @@ public class Wolf extends Entity{
 	
 	public void setCurrentState(AttackState state) {
 		currentState = state;
-	}
-	
-	public void incrementTurnNumber() {
-		turnNumber++;
 	}
 	
 	public void setBunny(Bunny bunny) {
@@ -96,5 +98,19 @@ public class Wolf extends Entity{
     	return false;
     }
     
+    public void resetCountDown() {
+    	waitingCountDown = 1000;
+    }
+    
+    public void updateCountDown() {
+    	waitingCountDown--;
+    	if (waitingCountDown == 0) {
+    		setCurrentState(AttackState.ATTACKING);
+    	}
+    }
+    
+	public void incrementTurnNumber() {
+		turnNumber++;
+	}
 }
 
