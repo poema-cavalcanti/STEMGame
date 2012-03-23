@@ -7,11 +7,14 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import bunny.state.HomeState;
+import bunny.state.IntroSceneState;
 import bunny.state.TrainingState;
  
 public class BunnyGame extends StateBasedGame
 {
 	private int lastStateId; 
+	private int width = 750; 
+	private int height = 600; 
 	
     public int getLastStateId() {
 		return lastStateId;
@@ -30,10 +33,11 @@ public class BunnyGame extends StateBasedGame
     public void initStatesList(GameContainer gc) 
 			throws SlickException 
 	{
+    	addState(new IntroSceneState());
     	addState(new HomeState());
     	addState(new TrainingState());
     	
-    	lastStateId = HomeState.ID;
+    	lastStateId = IntroSceneState.ID;
     
 	}
  
@@ -46,5 +50,21 @@ public class BunnyGame extends StateBasedGame
          app.setDisplayMode(750, 600, false); // false means no fullscreen
          app.start();
     }
+    
+    public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
 }
