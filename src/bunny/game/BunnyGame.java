@@ -2,25 +2,26 @@ package bunny.game;
 
 
 import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.tiled.TiledMap;
 
-import bunny.component.movement.ArrowKeyMovement;
-import bunny.component.render.RenderComponent;
-import bunny.entity.Entity;
 import bunny.state.HomeState;
 import bunny.state.TrainingState;
  
 public class BunnyGame extends StateBasedGame
 {
-    public BunnyGame()
+	private int lastStateId; 
+	
+    public int getLastStateId() {
+		return lastStateId;
+	}
+
+	public void setLastStateId(int lastStateId) {
+		this.lastStateId = lastStateId;
+	}
+
+	public BunnyGame()
     {
         super("Bunny Math Warrior");
     }
@@ -31,6 +32,9 @@ public class BunnyGame extends StateBasedGame
 	{
     	addState(new HomeState());
     	addState(new TrainingState());
+    	
+    	lastStateId = HomeState.ID;
+    
 	}
  
     public static void main(String[] args) 
@@ -42,4 +46,5 @@ public class BunnyGame extends StateBasedGame
          app.setDisplayMode(750, 600, false); // false means no fullscreen
          app.start();
     }
+
 }

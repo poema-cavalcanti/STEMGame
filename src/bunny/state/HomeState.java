@@ -17,13 +17,14 @@ import org.newdawn.slick.tiled.TiledMap;
 import bunny.component.movement.ArrowKeyMovement;
 import bunny.component.render.RenderComponent;
 import bunny.entity.Entity;
+import bunny.game.BunnyGame;
 
 public class HomeState extends BasicGameState
 {
 	// ID for given state 
 	public static final int ID = 1; 
 	// game holding this state 
-	private StateBasedGame game;
+	private BunnyGame game;
 	private TiledMap homeMap; 
 	private float x = 75f, y = 450f; // used for bunny's initial position
 	private Entity bunny;
@@ -38,7 +39,7 @@ public class HomeState extends BasicGameState
 			throws SlickException 
 	{
     	homeMap = new TiledMap("data/home_room.tmx");  // sets the homeMap from file.
-    	this.game = game; 
+    	this.game = (BunnyGame) game; 
     	String up = "data/rabbit_back.bmp"; 			// only gets the file name strings instead of creating image
     	String down = "data/rabbit_forward.bmp";
     	String side = "data/rabbit_side.bmp";
@@ -49,7 +50,14 @@ public class HomeState extends BasicGameState
     	bunny.setBlocked(homeMap);
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
     	bunny.AddComponent(new RenderComponent("BunnyRender")); // add render (almost like a toString, but not)
+    	if(this.game.getLastStateId() == TrainingState.ID) {
+    		this.x = 550; 
+    		this.y = 275;
+    	}
+    	
     	bunny.setPosition(new Vector2f(x,y)); // where the bunny will first appear on screen
+    	
+    	this.game.setLastStateId(this.ID);
     }
 
 	@Override
@@ -57,6 +65,7 @@ public class HomeState extends BasicGameState
 			throws SlickException {
 		homeMap.render(0,0); // homeMap is rendered first so it stays in the background
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
+    	System.out.println("ID: " + TrainingState.ID);
 	}
 
 
@@ -70,7 +79,6 @@ public class HomeState extends BasicGameState
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
 		bunny.update(container,null,delta);
-		System.out.println("x: " + bunny.getPosition().x + ", y: " + bunny.getPosition().y);
 		if(bunny.getPosition().x > 655) {
 			if(bunny.getPosition().y > 246 && bunny.getPosition().y < 311) {
 				game.enterState(TrainingState.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
