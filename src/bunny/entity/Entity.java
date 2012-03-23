@@ -18,20 +18,21 @@ import bunny.component.render.RenderComponent;
 
 
 public class Entity {
+	/*************
+	 * INSTANCES
+	 *************/
+    String id; // id
  
-    String id;
- 
-    Vector2f position;
-    private boolean[][] blocked;
-	private static final int SIZE = 75;
-
-    int [] duration = {100, 100, 100, 100, 100, 100};
+    // MOVING RELATED VARIABLES
+    protected Vector2f position;
+    protected boolean[][] blocked;
+	protected static final int SIZE = 75;
 	
-	/*
-	* false variable means do not auto update the animation.
-	* By setting it to false animation will update only when
-	* the user presses a key.
-	*/
+// to use for tile to tile movement. commented out for now.
+//	private boolean movingOnPath = false;
+
+	// SPRITE ANIMATION RELATED VARIABLES
+    int [] duration = {100, 100, 100, 100, 100, 100};
     
 	Image upStrip;
 	Image downStrip;
@@ -50,13 +51,13 @@ public class Entity {
 	private Animation right; 
 
 	private Animation sprite = null;
+	protected Direction direction;
 	
-	private Direction direction;
-	
+	// COMPONENTS
     RenderComponent renderComponent = null;
- 
     ArrayList<Component> components = null;
  
+    // CONSTRUCTOR
     public Entity(String id)
     {
         this.id = id;
@@ -82,10 +83,14 @@ public class Entity {
     	right = null;
     	
         sprite = right;
-        
         direction = Direction.RIGHT;
+        
+// to use for tile to tile movement. commented out for now.        
+//        movingOnPath = false;
+
     }
  
+    // ADD COMPONENTS
     public void AddComponent(Component component)
     {
         if(RenderComponent.class.isInstance(component))
@@ -94,7 +99,10 @@ public class Entity {
         component.setOwnerEntity(this);
         components.add(component);
     }
- 
+
+    /********************************
+     * GETS FOR OUR MANY INSTANCES
+     ********************************/
     public Component getComponent(String id)
     {
         for(Component comp : components)
@@ -132,17 +140,28 @@ public class Entity {
 	    int yBlock = (int)y / SIZE;
 	    return blocked[xBlock][yBlock];
 	}
-    
+	
+// to use for tile to tile movement. commented out for now.
+//	public boolean getMoving()
+//	{
+//		return movingOnPath;
+//	}
+	
+	/********************************
+	 * SET FUNCTIONS FOR INSTANCES
+	 ********************************/
     public void setImages(String upD, String downD, String sideD, Color t)
     {
+    	// load images and set background transparent
     	try {
-			upStrip = new Image (upD, t);
+			upStrip = new Image (upD, t); 
 			downStrip = new Image (downD, t);
 	    	sideStrip = new Image (sideD, t);
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
     	
+    	// from the sprite sheet get the right sub images in an array
     	for (int i = 0; i < 6; i++)
     	{
     		movementUp[i] = upStrip.getSubImage((75*i), 0, 75, 75);
@@ -151,10 +170,7 @@ public class Entity {
     		movementRight[i] = sideStrip.getSubImage((75*i), 0, 75, 75);
     	}
     	
-    	for (int i = 0; i<= 5; i++) {
-    		System.out.println("Up Anim Frame");
-    		System.out.println(movementUp[i]);
-    	}
+    	// use array images to create animations. each frame will have duration and animations do not autoupdate
     	up = new Animation(movementUp, duration, false);
     	down = new Animation(movementDown, duration, false);
     	left = new Animation(movementLeft, duration, false);
@@ -163,6 +179,7 @@ public class Entity {
     	sprite = right;
     }
     
+    // stores where the entity's movement is/isn't blocked
     public void setBlocked(TiledMap Map)
     {
 		blocked = new boolean[Map.getWidth()][Map.getHeight()];
@@ -215,7 +232,16 @@ public class Entity {
     		break;
     	}
     }
+    
+ // to use for tile to tile movement. commented out for now.
+//    public void setMoving(boolean moving)
+//    {
+//    	movingOnPath = moving;
+//    }
  
+    /**********
+     * UPDATE
+     **********/
     public void update(GameContainer gc, StateBasedGame sb, int delta)
     {
         for(Component component : components)
@@ -224,6 +250,9 @@ public class Entity {
         }
     }
  
+    /**********
+     * RENDER
+     **********/
     public void render(GameContainer gc, StateBasedGame sb, Graphics gr)
     {
         if(renderComponent != null)

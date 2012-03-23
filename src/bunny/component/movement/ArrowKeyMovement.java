@@ -5,11 +5,13 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
  
+import bunny.entity.characters.Bunny;
 import bunny.game.Direction;
 import bunny.component.Component;
 
 public class ArrowKeyMovement extends Component {
-
+	protected Bunny owner;
+	private static final int SIZE = 75;
 	float direction;
 	float speed;
  
@@ -50,7 +52,7 @@ public class ArrowKeyMovement extends Component {
     	    if (owner.getSprite().isStopped()) {
     	    	owner.getSprite().start();
     	    }
-    	    if (!owner.isBlocked(position.x, position.y + delta * 0.1f)) {
+    	    if (!owner.isBlocked(position.x, position.y + SIZE + delta * 0.1f)) {
     	    	position.y += delta * 0.1f;
     	    }
     	    owner.getSprite().update(delta);
@@ -72,12 +74,12 @@ public class ArrowKeyMovement extends Component {
     	    if (owner.getSprite().isStopped()) {
     	    	owner.getSprite().start();
     	    }
-    	    if (!owner.isBlocked(position.x + delta * 0.1f, position.y)) {
+    	    if (!owner.isBlocked(position.x + SIZE + delta * 0.1f, position.y)) {
     	    	position.x += delta * 0.1f;
     	    }
     	    owner.getSprite().update(delta);
     	}
-    	
+   
     	owner.setPosition(position);
 	}
 
