@@ -1,5 +1,7 @@
 package bunny.entity.characters;
 
+import org.newdawn.slick.geom.Rectangle;
+
 import bunny.entity.Entity;
 import bunny.entity.EntityType;
 import bunny.entity.characters.AttackState;
@@ -13,8 +15,8 @@ public class Wolf extends Entity{
 	private boolean targeted;
 	private int turnNumber;
 	AttackState currentState;
-	private int waitingCountDown;
-	private Bunny bunny;
+	public Bunny bunny;
+	Rectangle bounds;
 	
 	public Wolf(String id) {
 		super(id);
@@ -22,7 +24,6 @@ public class Wolf extends Entity{
 		targeted = false;
 		currentState = AttackState.WAITING;
 		turnNumber = 1;
-		waitingCountDown = 1000;
 	}
 	
 	// GET
@@ -56,16 +57,16 @@ public class Wolf extends Entity{
 		return type;
 	}
 	
-	public Bunny getBunny() {
-		return bunny;
-	}
-	
 	public int getTurnNumber() {
 		return turnNumber;
 	}
 	
-	public int getCountDown() {
-		return waitingCountDown;
+	public boolean getTargeted() {
+		return targeted;
+	}
+	
+	public Rectangle getBounds() {
+		return bounds;
 	}
 	
 	// SET
@@ -81,36 +82,41 @@ public class Wolf extends Entity{
 		currentState = state;
 	}
 	
-	public void setBunny(Bunny bunny) {
-		this.bunny = bunny;
+	public void setTargeted(boolean target) {
+		targeted = target;
 	}
+	
+	public void setBounds() {
+    	bounds = new Rectangle(getPosition().x, getPosition().y, 75, 75);
+    }
     
-    // INFO HANDLING
+	public void updateBounds() {
+    	bounds.setLocation(getPosition().x, getPosition().y);
+    }
+	
     public boolean takeDamage(int damage) throws Throwable
     {
     	if(targeted) {
     		healthPoints -= damage;
-    		if (healthPoints <= 0)
-    			super.finalize();
     		return true;
     	}
     		
     	return false;
     }
     
-    public void resetCountDown() {
-    	waitingCountDown = 1000;
-    }
-    
-    public void updateCountDown() {
-    	waitingCountDown--;
-    	if (waitingCountDown == 0) {
-    		setCurrentState(AttackState.ATTACKING);
-    	}
-    }
-    
 	public void incrementTurnNumber() {
 		turnNumber++;
+	}
+	
+	public void attack(Bunny hero)
+	{
+		try {
+			hero.takeDamage(getAttackValue());
+			incrementTurnNumber();
+			setCurrentState(AttackState.WAITING);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 }
 

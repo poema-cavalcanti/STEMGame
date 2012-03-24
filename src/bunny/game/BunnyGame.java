@@ -41,8 +41,6 @@ public class BunnyGame extends StateBasedGame
     	addState(new HomeState());
     	addState(new TrainingState());
     	addState(new IntroSceneState());
-    	addState(new HomeState());
-    	addState(new TrainingState());
     	
     	lastStateId = IntroSceneState.ID;
 	}

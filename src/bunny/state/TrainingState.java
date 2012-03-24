@@ -16,6 +16,7 @@ import bunny.component.movement.ArrowKeyMovement;
 import bunny.component.render.RenderComponent;
 import bunny.entity.EntityType;
 import bunny.entity.characters.Bunny;
+import bunny.entity.characters.BunnyStates;
 import bunny.entity.characters.Wolf;
 import bunny.game.GamePlayState;
 import bunny.game.Direction;
@@ -48,6 +49,7 @@ public class TrainingState extends BasicGameState
     	
     	Transparent = (new Image(attack)).getColor(0, 0);
     	bunny.setAttack(attack, Transparent);
+    	bunny.setCurrentState(BunnyStates.WALKING);
     	
     	bunny.setBlocked(trainingMap);
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
@@ -60,32 +62,48 @@ public class TrainingState extends BasicGameState
     	side = "data/wolf_side_run_strip.bmp";
     	attack ="data/wolf_attack_strip.bmp";
     	
-    	Transparent = (new Image(up)).getColor(0,0);
+    	Transparent = (new Image(side)).getColor(0,0);
     	wolf = new Wolf("wolf1");
     	wolf.setImages(up, down, side, Transparent);
     	
     	Transparent = (new Image(attack)).getColor(0, 0);
     	wolf.setAttack(attack, Transparent);
     	
+    	wolf.setPosition(new Vector2f(wx,wy));
     	wolf.setType(EntityType.CONST_WOLF);
     	wolf.setBlocked(trainingMap);
     	wolf.AddComponent(new RenderComponent("WolfRender"));
     	wolf.AddComponent(new EnemyAttack("WolfAttack"));
     	
-
+    	bunny.setBounds();
+    	wolf.setBounds();
+    	wolf.bunny = bunny;;
+    	bunny.enemy = wolf;
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		trainingMap.render(0,0); // homeMap is rendered first so it stays in the background
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
+    	if (wolf != null)
+    		wolf.render(container, null, g);
 
 	}
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
 		bunny.update(container, null, delta);
-		wolf.update(container, null, delta);
+		bunny.updateBounds();
+		
+		if (wolf != null) {
+			wolf.update(container, null, delta);
+			wolf.updateBounds();
+			bunny.setTagetedEnemy(wolf.getPosition());
+			bunny.setNearEnemy(wolf);		
+			if (wolf.getHealth() <= 0) {
+				wolf = null;
+			}
+		}
 	}
 	@Override
 	public int getID() {

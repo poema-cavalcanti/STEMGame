@@ -20,6 +20,7 @@ import bunny.component.render.RenderComponent;
 import bunny.entity.Entity;
 import bunny.entity.NPC;
 import bunny.entity.characters.Bunny;
+import bunny.entity.characters.BunnyStates;
 import bunny.game.BunnyGame;
 
 public class HomeState extends BasicGameState 
@@ -56,9 +57,12 @@ public class HomeState extends BasicGameState
     	bunny.setImages(up, down, side, Transparent); // inside of setImages is where the actual image loading happens and we pass the color
     	bunny.setBlocked(homeMap);
     	bunny.setPosition(new Vector2f(x,y));
+    	bunny.setCurrentState(BunnyStates.WALKING);
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
     	bunny.AddComponent(new RenderComponent("BunnyRender")); // add render (almost like a toString, but not)
     	bunny.AddComponent(new NPCInteraction("BunnyNPCControl"));
+    	bunny.setBounds();
+    	
     	String[] momMessages = {"Hi", "Be careful out there!"}; 
     	Rectangle momBounds = new Rectangle(230f, 226f, 75f, 75f); 
     	mom = new NPC("mom", momMessages, momBounds);

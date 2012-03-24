@@ -6,6 +6,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import bunny.component.Component;
 import bunny.entity.Entity;
+import bunny.entity.characters.AttackState;
 import bunny.entity.characters.Bunny;
 import bunny.entity.characters.BunnyStates;
 import bunny.entity.characters.Wolf;
@@ -13,50 +14,36 @@ import bunny.game.Direction;
 
 public class HeroAttack extends Component{
 	protected Bunny owner;
-	private boolean hit;
 	
 	public HeroAttack (String id) {
 		this.id = id;
 	}
 	
-	public void setOwnerEntity(Bunny owner)
+	@Override
+	public void setOwnerEntity(Entity owner)
     {
-    	this.owner = owner;
+    	this.owner = (Bunny) owner;
     }
 	
-	public boolean getHit ()
-	{
-		return hit;
-	}
-	
-	public void attack(Wolf wolf)
-	{
-		try {
-			if (owner.getDirection() == Direction.UP || owner.getDirection() == Direction.RIGHT) {
-				owner.setSprite(Direction.ATTACK_RIGHT);
-			}
-			else {
-				owner.setSprite(Direction.ATTACK_LEFT);
-			}
-			wolf.takeDamage(owner.getSwordPower());
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
+		
 		Input input = gc.getInput();
-    	if (input.isKeyDown(Input.KEY_A))
+    	if (input.isKeyPressed(Input.KEY_A))
     	{
     		if(owner.getCurrentState() == BunnyStates.ATTACKING)
     		{
-    			owner.startAttack();
 	    		if (owner.getNearEnemy())
 	    		{
-	    			if (owner.getTargetedEnemy() != null)
-	    				attack(owner.getTargetedEnemy());
+	    			owner.setHit(true);	
+	    			owner.attack(owner.enemy);
+	    			owner.enemy.setCurrentState(AttackState.ATTACKING);
 	    		}
     		}
     	}
+		
+		owner.setHit(false);
+		System.out.println("Bunny health: " + owner.getHealth());
+		System.out.println("Bunny state: " + owner.getCurrentState());
+		System.out.println("Bunny position: " + owner.getPosition());
 	}
 }

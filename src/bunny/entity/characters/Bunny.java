@@ -1,5 +1,8 @@
 package bunny.entity.characters;
 
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
+
 import bunny.entity.Entity;
 import bunny.entity.characters.BunnyStates;
 import bunny.entity.characters.Wolf;
@@ -12,8 +15,11 @@ public class Bunny extends Entity{
 	private int defense;
 	private int swordPower;
 	private boolean nearEnemy;
-	BunnyStates currentState;
-	private Wolf targetedEnemy;
+	private BunnyStates currentState;
+	private Vector2f targetedEnemy;
+	private boolean hit;
+	public Wolf enemy;
+	Rectangle bounds;
 	
 	public Bunny(String id) {
 		super(id);
@@ -22,6 +28,7 @@ public class Bunny extends Entity{
 		swordPower = 25;
 		level = 0;
 		currentState = BunnyStates.WALKING;
+		hit = true;
 	}
 	
 	// GET
@@ -49,8 +56,16 @@ public class Bunny extends Entity{
 		return nearEnemy;
 	}
 	
-	public Wolf getTargetedEnemy() {
+	public Vector2f getTargetedEnemy() {
 		return targetedEnemy;
+	}
+	
+	public boolean getHit() {
+		return hit;
+	}
+	
+	public Rectangle getBounds() {
+		return bounds;
 	}
 	
 	// SET
@@ -66,50 +81,56 @@ public class Bunny extends Entity{
     	currentState = state;
     }
     
-    public void setNearEnemy(boolean near) {
-    	nearEnemy = near;
+    public void setNearEnemy(Wolf near) {
+    	if (bounds.intersects(near.getBounds())) {
+    		setCurrentState(BunnyStates.ATTACKING);
+    		nearEnemy = true;
+    		return;
+    	}
+    	else {
+    		nearEnemy = false;
+    	}
     }
     
-    public void setTagetedEnemy(Wolf enemy) {
+    public void toggleNearEnemy() {
+    	nearEnemy = false;
+    }
+    
+    public void updateBounds() {
+    	bounds.setLocation(getPosition().x, getPosition().y);
+    }
+    
+    public void setTagetedEnemy(Vector2f enemy) {
     	targetedEnemy = enemy;
+    }
+    
+    public void setHit(boolean hit) {
+    	this.hit = hit;
+    }
+    
+    public void setBounds() {
+    	bounds = new Rectangle(getPosition().x, getPosition().y, 75, 75);
     }
     
     public boolean takeDamage(int damage) {
     	return false;
     }
-    
-    public void startAttack() {
-		switch (getDirection()) {
-		case UP:
-			if ((targetedEnemy.getPosition().getX() > (getPosition().getX() - 25))|| (targetedEnemy.getPosition().getX() < (getPosition().getX() + 25))) {
-				if ((targetedEnemy.getPosition().getY() < (getPosition().getY() - 75)))
-				{
-					setNearEnemy(true);
+      
+    public void attack(Wolf wolf)
+	{
+    	wolf.setTargeted(nearEnemy);
+    	if (hit) {
+			try {
+				if (getDirection() == Direction.UP || getDirection() == Direction.RIGHT) {
+					setSprite(Direction.ATTACK_RIGHT);
 				}
-			}
-		case DOWN:
-			if ((targetedEnemy.getPosition().getX() > (getPosition().getX() - 25))|| (targetedEnemy.getPosition().getX() < (getPosition().getX() + 25))) {
-				if ((targetedEnemy.getPosition().getY() > (getPosition().getY() + 100)))
-				{
-					setNearEnemy(true);
+				else {
+					setSprite(Direction.ATTACK_LEFT);
 				}
+				wolf.takeDamage(getSwordPower());
+			} catch (Throwable e) {
+				e.printStackTrace();
 			}
-		case LEFT:
-			if ((targetedEnemy.getPosition().getY() > (getPosition().getY() - 25))|| (targetedEnemy.getPosition().getY() < (getPosition().getY() + 25))) {
-				if ((targetedEnemy.getPosition().getX() < (getPosition().getX() + 100)))
-				{
-					setNearEnemy(true);
-				}
-			}
-		case RIGHT:
-			if ((targetedEnemy.getPosition().getX() > (getPosition().getX() - 25))|| (targetedEnemy.getPosition().getX() < (getPosition().getX() + 25))) {
-				if ((targetedEnemy.getPosition().getY() < (getPosition().getX() + 100)))
-				{
-					setNearEnemy(true);
-				}
-			}
-		default:
-			setNearEnemy(false);
-		}
-    }
+    	}
+	}
 }
