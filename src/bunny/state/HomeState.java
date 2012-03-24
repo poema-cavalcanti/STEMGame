@@ -71,7 +71,7 @@ public class HomeState extends BasicGameState
     	mom.setPosition(new Vector2f(x,y));
     	mom.AddComponent(new RenderComponent("MomRender"));
     	mom.setPosition(new Vector2f(220, 215));
-    	momImage = new Image(momBmp);
+    	momImage = new Image(momBmp, (new Image(momBmp)).getColor(0, 0));
     	if(this.game.getLastStateId() == TrainingState.ID) {
     		this.x = 600; 
     		this.y = 275;
@@ -86,9 +86,9 @@ public class HomeState extends BasicGameState
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		homeMap.render(0,0); // homeMap is rendered first so it stays in the background
-		g.drawString("Use arrow keys to move", 10, 10);
+		g.drawString("Use arrow keys to move", 10, 30);
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
-    	momImage.draw(mom.getPosition().x, mom.getPosition().y, (new Image("data/lady_rabbit.bmp")).getColor(0, 0));
+    	g.drawImage(momImage, mom.getPosition().x, mom.getPosition().y);
 
 	}
 

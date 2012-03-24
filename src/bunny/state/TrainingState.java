@@ -103,17 +103,23 @@ public class TrainingState extends BasicGameState
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		trainingMap.render(0,0); // homeMap is rendered first so it stays in the background
-		g.drawString("press A to attack when near a wolf", 10, 10);
+		g.drawString("press A to attack when near a wolf", 10, 30);
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
     	if (wolf != null) {
     		wolf.render(container, null, g);
     		wolf.getBanner().draw(wolf.getPosition().x, wolf.getPosition().y - 75);
     		g.drawString("10", wolf.getPosition().x + 30, wolf.getPosition().y - 50);
+    		if (bunny.getPosition().distance(wolf.getPosition()) <= 100) {
+    			g.drawString("Careful! This constant wolf would have done you " + wolf.getAttackValue() + " damage out on the surface!", 10, 50);
+    		}
     	}
     	if (wolf2 != null) {
     		wolf2.render(container, null, g);
     		wolf2.getBanner().draw(wolf2.getPosition().x, wolf2.getPosition().y - 75);
     		g.drawString("5x", wolf2.getPosition().x + 30, wolf2.getPosition().y - 50);
+    		if (bunny.getPosition().distance(wolf2.getPosition()) <= 100) {
+    			g.drawString("Careful! This linear wolf would have done you " + wolf2.getAttackValue() + " damage out on the surface!", 10, 70);
+    		}
     	}
     	
 	}
@@ -124,10 +130,12 @@ public class TrainingState extends BasicGameState
 		bunny.updateBounds();
 		
 		if (wolf != null && wolf2 != null) {
-			if (bunny.getPosition().distance(wolf.getPosition()) <= bunny.getPosition().distance(wolf2.getPosition()))
+			if (bunny.getPosition().distance(wolf.getPosition()) <= bunny.getPosition().distance(wolf2.getPosition())) {
 				bunny.enemy = wolf;
-			else
+			}
+			else {
 				bunny.enemy = wolf2;
+			}
 			wolf.update(container, null, delta);
 			wolf.updateBounds();
 			bunny.setTagetedEnemy(wolf.getPosition());
