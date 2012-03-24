@@ -1,5 +1,6 @@
 package bunny.entity.characters;
 
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 
 import bunny.entity.Entity;
@@ -17,6 +18,7 @@ public class Wolf extends Entity{
 	AttackState currentState;
 	public Bunny bunny;
 	Rectangle bounds;
+	private Image banner;
 	
 	public Wolf(String id) {
 		super(id);
@@ -69,6 +71,10 @@ public class Wolf extends Entity{
 		return bounds;
 	}
 	
+	public Image getBanner() {
+		return banner;
+	}
+	
 	// SET
 	public void setHealth(int health) {
     	healthPoints = health;
@@ -84,6 +90,10 @@ public class Wolf extends Entity{
 	
 	public void setTargeted(boolean target) {
 		targeted = target;
+	}
+	
+	public void setBanner(Image image) {
+		banner = image;
 	}
 	
 	public void setBounds() {
@@ -111,8 +121,13 @@ public class Wolf extends Entity{
 	public void attack(Bunny hero)
 	{
 		try {
-			hero.takeDamage(getAttackValue());
-			incrementTurnNumber();
+			if (getCurrentState() == AttackState.ATTACKING) {
+				if (hero.getNearEnemy()) {
+					hero.takeDamage(getAttackValue());
+					incrementTurnNumber();
+					hero.setAttackState(AttackState.ATTACKING);
+				}
+			}
 			setCurrentState(AttackState.WAITING);
 		} catch (Throwable e) {
 			e.printStackTrace();

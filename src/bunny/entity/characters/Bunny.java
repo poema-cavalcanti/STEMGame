@@ -16,6 +16,7 @@ public class Bunny extends Entity{
 	private int swordPower;
 	private boolean nearEnemy;
 	private BunnyStates currentState;
+	private AttackState attackState;
 	private Vector2f targetedEnemy;
 	private boolean hit;
 	public Wolf enemy;
@@ -28,6 +29,7 @@ public class Bunny extends Entity{
 		swordPower = 25;
 		level = 0;
 		currentState = BunnyStates.WALKING;
+		attackState = AttackState.WAITING;
 		hit = true;
 	}
 	
@@ -50,6 +52,10 @@ public class Bunny extends Entity{
 	
 	public BunnyStates getCurrentState() {
 		return currentState;
+	}
+	
+	public AttackState getAttackState() {
+		return attackState;
 	}
 	
 	public boolean getNearEnemy() {
@@ -79,6 +85,10 @@ public class Bunny extends Entity{
     
     public void setCurrentState(BunnyStates state) {
     	currentState = state;
+    }
+    
+    public void setAttackState(AttackState state) {
+    	attackState = state;
     }
     
     public void setNearEnemy(Wolf near) {
@@ -113,6 +123,7 @@ public class Bunny extends Entity{
     }
     
     public boolean takeDamage(int damage) {
+    	System.out.println("Wolf is trying to attack with " + damage + " damage!");
     	return false;
     }
       

@@ -26,7 +26,6 @@ public class HeroAttack extends Component{
     }
 	
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
-		
 		Input input = gc.getInput();
     	if (input.isKeyPressed(Input.KEY_A))
     	{
@@ -37,13 +36,11 @@ public class HeroAttack extends Component{
 	    			owner.setHit(true);	
 	    			owner.attack(owner.enemy);
 	    			owner.enemy.setCurrentState(AttackState.ATTACKING);
+	    			System.out.println("The bunny attack the wolf!");
 	    		}
     		}
     	}
 		
-		owner.setHit(false);
-		System.out.println("Bunny health: " + owner.getHealth());
-		System.out.println("Bunny state: " + owner.getCurrentState());
-		System.out.println("Bunny position: " + owner.getPosition());
+		owner.setHit(false);		
 	}
 }

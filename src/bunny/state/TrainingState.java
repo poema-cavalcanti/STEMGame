@@ -1,6 +1,7 @@
 package bunny.state;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -31,7 +32,8 @@ public class TrainingState extends BasicGameState
 	private float bx = 75f, by = 450f; // used for bunny's initial position;
 	protected Bunny bunny;
 	private float wx = 525f, wy = 150f; // used for wolf's initial position;
-	private Wolf wolf;
+	private Wolf wolf;	
+	private Wolf wolf2;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -68,6 +70,7 @@ public class TrainingState extends BasicGameState
     	
     	Transparent = (new Image(attack)).getColor(0, 0);
     	wolf.setAttack(attack, Transparent);
+    	wolf.setBanner(new Image("data/banner.bmp", Transparent));
     	
     	wolf.setPosition(new Vector2f(wx,wy));
     	wolf.setType(EntityType.CONST_WOLF);
@@ -75,19 +78,44 @@ public class TrainingState extends BasicGameState
     	wolf.AddComponent(new RenderComponent("WolfRender"));
     	wolf.AddComponent(new EnemyAttack("WolfAttack"));
     	
+    	Transparent = (new Image(side)).getColor(0,0);
+    	wolf2 = new Wolf("wolf2");
+    	wolf2.setImages(up, down, side, Transparent);
+    	
+    	Transparent = (new Image(attack)).getColor(0, 0);
+    	wolf2.setAttack(attack, Transparent);
+    	wolf2.setBanner(new Image("data/banner.bmp", Transparent));
+    	
+    	wolf2.setPosition(new Vector2f(wx,375));
+    	wolf2.setType(EntityType.LIN_WOLF);
+    	wolf2.setBlocked(trainingMap);
+    	wolf2.AddComponent(new RenderComponent("Wolf2Render"));
+    	wolf2.AddComponent(new EnemyAttack("Wolf2Attack"));
+    	
     	bunny.setBounds();
     	wolf.setBounds();
-    	wolf.bunny = bunny;;
+    	wolf2.setBounds();
+    	wolf.bunny = bunny;
+    	wolf2.bunny = bunny;
     	bunny.enemy = wolf;
 	}
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		trainingMap.render(0,0); // homeMap is rendered first so it stays in the background
+		g.drawString("press A to attack when near a wolf", 10, 10);
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
-    	if (wolf != null)
+    	if (wolf != null) {
     		wolf.render(container, null, g);
-
+    		wolf.getBanner().draw(wolf.getPosition().x, wolf.getPosition().y - 75);
+    		g.drawString("10", wolf.getPosition().x + 30, wolf.getPosition().y - 50);
+    	}
+    	if (wolf2 != null) {
+    		wolf2.render(container, null, g);
+    		wolf2.getBanner().draw(wolf2.getPosition().x, wolf2.getPosition().y - 75);
+    		g.drawString("5x", wolf2.getPosition().x + 30, wolf2.getPosition().y - 50);
+    	}
+    	
 	}
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
@@ -95,13 +123,46 @@ public class TrainingState extends BasicGameState
 		bunny.update(container, null, delta);
 		bunny.updateBounds();
 		
-		if (wolf != null) {
+		if (wolf != null && wolf2 != null) {
+			if (bunny.getPosition().distance(wolf.getPosition()) <= bunny.getPosition().distance(wolf2.getPosition()))
+				bunny.enemy = wolf;
+			else
+				bunny.enemy = wolf2;
+			wolf.update(container, null, delta);
+			wolf.updateBounds();
+			bunny.setTagetedEnemy(wolf.getPosition());
+			bunny.setNearEnemy(wolf);
+			if (wolf.getHealth() <= 0) {
+				wolf = null;
+			}
+			wolf2.update(container, null, delta);
+			wolf2.updateBounds();
+			bunny.setTagetedEnemy(wolf2.getPosition());
+			bunny.setNearEnemy(wolf2);		
+			if (wolf2.getHealth() <= 0) {
+				wolf2 = null;
+			}
+		}
+		
+		else if (wolf != null && wolf2 == null) {
+			bunny.enemy = wolf;
 			wolf.update(container, null, delta);
 			wolf.updateBounds();
 			bunny.setTagetedEnemy(wolf.getPosition());
 			bunny.setNearEnemy(wolf);		
 			if (wolf.getHealth() <= 0) {
 				wolf = null;
+			}
+		}
+		
+		else if (wolf2 != null && wolf == null) {
+			bunny.enemy = wolf2;
+			wolf2.update(container, null, delta);
+			wolf2.updateBounds();
+			bunny.setTagetedEnemy(wolf2.getPosition());
+			bunny.setNearEnemy(wolf2);		
+			if (wolf2.getHealth() <= 0) {
+				wolf2 = null;
 			}
 		}
 	}

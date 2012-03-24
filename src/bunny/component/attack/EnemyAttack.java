@@ -32,12 +32,9 @@ public class EnemyAttack extends Component{
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) {
-		System.out.println("Wolf Health: " + owner.getHealth());
-		System.out.println("Wolf Targeted" + owner.getTargeted());
-		System.out.println("Wolf position: " + owner.getPosition());
 		
-		if (owner.getCurrentState() == AttackState.ATTACKING) {
+//		if (owner.getCurrentState() == AttackState.ATTACKING) {
 			owner.attack(owner.bunny);
 		}
-	}
+//	}
 }

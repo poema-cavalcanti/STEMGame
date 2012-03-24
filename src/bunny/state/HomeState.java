@@ -86,6 +86,7 @@ public class HomeState extends BasicGameState
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		homeMap.render(0,0); // homeMap is rendered first so it stays in the background
+		g.drawString("Use arrow keys to move", 10, 10);
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
     	momImage.draw(mom.getPosition().x, mom.getPosition().y, (new Image("data/lady_rabbit.bmp")).getColor(0, 0));
 
